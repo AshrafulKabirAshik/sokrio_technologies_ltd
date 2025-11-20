@@ -24,7 +24,25 @@ class UserDetailsView extends StatelessWidget {
                 child: CircleAvatar(
                   radius: 48,
                   backgroundColor: controller.globalValues.isDarkMode.value ? Colors.white : Colors.black,
-                  backgroundImage: Image.network(controller.userDetailsModel.value.avatar ?? '').image,
+                  child: ClipOval(
+                    child: Image.network(
+                      controller.userDetailsModel.value.avatar ?? '',
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Icon(
+                          Icons.person,
+                          size: 40,
+                          color: controller.globalValues.isDarkMode.value ? Colors.black : Colors.white,
+                        );
+                      },
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(child: CircularProgressIndicator(strokeWidth: 1.5));
+                      },
+                    ),
+                  ),
                 ),
               ),
               SizedBox(height: AppValues.contentPadding * 2),
